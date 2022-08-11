@@ -1,44 +1,27 @@
 <?php
-   // Generate a new private (and public) key pair
-  $config = array(
-    "digest_alg" => "sha512",
-    "private_key_bits" => 4096,
-    "private_key_type" => OPENSSL_KEYTYPE_RSA,
-  );
-  // Create the private and public key
-  $keyPairRes = openssl_pkey_new();
+  $header = json_encode(['typ' => 'JWT', 'alg' => 'RS256']);
 
-  // extract private key from the pair
-  openssl_pkey_export($keyPairRes, $newPrivateKey);
+  $payload = json_encode(['user_id' => 123]);
 
-  // extract public key from the pair
-  $publicKeyPem = openssl_pkey_get_details($keyPairRes)['key'];
+  // base64url encode header
+  $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
 
-  // write private key to file
-  $privateFile = fopen('private.pem', 'w');
-  fwrite($privateFile, $newPrivateKey) or die('Unable to open file');
-  
-  // write public key to file
-  $publicFile = fopen('public.pem', 'w');
-  fwrite($publicFile, $publicKeyPem) or die('Unable to open public key file');
-  
+  // base64url encode payload
+  $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
 
-  // read private key from file
-  $private_key = openssl_pkey_get_private(file_get_contents('private.pem'));
+  $privateKey = file_get_contents('private.pem');
+  // create signature hash
+  $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $privateKey , true);
 
-  // read public key from file
-  $public_key = openssl_pkey_get_public(file_get_contents('public.pem'));
+  // base64url encode signature
+  $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
 
-  // Encrypt the data to $encrypted using the public key
-  openssl_public_encrypt('data to encrypt', $encrypted, $public_key);
-  
-  // print the encrypted data
-  echo $encrypted;
+  // create  JWT
+  $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
 
-  // Decrypt the data using the private key and store the results in $decrypted
-  openssl_private_decrypt($encrypted, $decrypted, $private_key);
+  echo $jwt;
 
-  // print the decrypted data
-  echo $decrypted;
+  $jwtFile = fopen('jwt.txt', 'w');
+  fwrite($jwtFile, $jwt) or die('Unable to open file');
 
 ?>
