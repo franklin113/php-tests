@@ -5,3 +5,7 @@ vendor
 jwt.txt
 
 .env
+
+
+*.png
+*.jpg
