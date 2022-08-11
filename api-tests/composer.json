@@ -1,0 +1,17 @@
+{
+    "name": "franklin113/api-test",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Franklin113\\ApiTest\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tim Franklin"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.4"
+    }
+}
