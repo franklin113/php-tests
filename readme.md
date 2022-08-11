@@ -1,8 +1,9 @@
 # Building Containers
 Here is a list of containers used in this project.
-- [ffmpeg-php](#test)
-### ./ffmpeg-tests/Dockerfile
-`#ffmpeg-php`
+- [ffmpeg-php](#ffmpeg-php)
+### ffmpeg-php
+```./ffmpeg-tests/Dockerfile```
+
 This is the dockerfile that is used to build the `ffmpeg-php` container. It is based on the `php:latest` image, and installs ffmpeg. Install by running the below command inside that directory.
 ```
 docker build -t ffmpeg-php .
@@ -35,4 +36,4 @@ docker run --rm -it \
 This is essentially saying- 
 Run the ffmpeg-php container, mount the current directory to the container, and run the test.php script.
 
-`#test`
+# test

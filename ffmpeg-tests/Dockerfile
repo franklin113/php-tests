@@ -1,4 +1,4 @@
-FROM php:latest
+FROM php:8.1
 RUN apt-get -y update
 RUN apt-get install -y ffmpeg
 
